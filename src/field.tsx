@@ -39,10 +39,11 @@ export function updateField(
 
 function sweep(tile: ITile, tiles: ITile[]) {
   for (const adjacentTile of getAdjacentTiles(tile, tiles)) {
-    const x = adjacentTile.showContent;
+    const alreadyVisited = adjacentTile.showContent;
+
     adjacentTile.showContent = true;
 
-    if (!adjacentTile?.minesAround && !x) {
+    if (!adjacentTile?.minesAround && !alreadyVisited) {
       sweep(adjacentTile, tiles);
     }
   }
@@ -51,16 +52,16 @@ function sweep(tile: ITile, tiles: ITile[]) {
 const offsets = [-1, 0, 1];
 
 const getAdjacentTiles = (point: ITile, tiles: ITile[]) =>
-  // create a list of x,y coordinates from -1,-1 to 1,1
+  // create a list of (x,y) coordinates from (-1,-1) to (1,1)
   offsets
     .flatMap((x) => offsets.map((y) => ({ x, y })))
-    // filter out 0,0
+    // filter out the center (0,0)
     .filter(({ x, y }) => x || y)
     // find corresponding tiles
     .map(({ x, y }) =>
       tiles.find((t) => t.x === point.x + x && t.y === point.y + y)
     )
-    // filter out tiles that couldn't be found (outside of the field)
+    // filter out tiles that couldn't be found (out of field bounds)
     .filter(isValue);
 
 export const generateMineIndexes = () => {
