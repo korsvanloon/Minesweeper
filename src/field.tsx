@@ -51,7 +51,7 @@ function sweep(tile: ITile, tiles: ITile[]) {
 
 const offsets = [-1, 0, 1];
 
-const getAdjacentTiles = (point: ITile, tiles: ITile[]) =>
+const getAdjacentTiles = (center: ITile, tiles: ITile[]) =>
   // create a list of (x,y) coordinates from (-1,-1) to (1,1)
   offsets
     .flatMap((x) => offsets.map((y) => ({ x, y })))
@@ -59,7 +59,7 @@ const getAdjacentTiles = (point: ITile, tiles: ITile[]) =>
     .filter(({ x, y }) => x || y)
     // find corresponding tiles
     .map(({ x, y }) =>
-      tiles.find((t) => t.x === point.x + x && t.y === point.y + y)
+      tiles.find((t) => t.x === center.x + x && t.y === center.y + y)
     )
     // filter out tiles that couldn't be found (out of field bounds)
     .filter(isValue);
